@@ -1,4 +1,4 @@
-name: Build and Deploy to Google Cloud Storage
+name: Build and Deploy to GCS and GitHub Pages
 
 on:
   push:
@@ -7,10 +7,11 @@ on:
 
 permissions:
   contents: read
+  pages: write
   id-token: write
 
 concurrency:
-  group: gcs-deployment
+  group: static-site-deployment
   cancel-in-progress: true
 
 jobs:
@@ -51,3 +52,19 @@ jobs:
 
       - name: Set cache-control for static assets
         run: gcloud storage objects update "gs://login_gcp_front_end/assets/*" --cache-control="public,max-age=31536000,immutable"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy-pages:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
