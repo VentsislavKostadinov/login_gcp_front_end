@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: '/login_gcp_front_end/',
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/login_gcp_front_end/' : '/',
   plugins: [react()],
-})
+}))
