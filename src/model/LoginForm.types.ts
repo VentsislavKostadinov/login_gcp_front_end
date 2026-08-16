@@ -3,6 +3,10 @@ export type LoginFormValues = {
   password: string;
 };
 
-export type LoginFormProps = {
-  onSubmit: (values: LoginFormValues) => void;
+export type LoginFormResponse = {
+  uid: string;
+  mail: string;
+  idToken: string;
+  refreshToken: string;
+  expiresIn: number;
 };

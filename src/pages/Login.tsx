@@ -1,28 +1,29 @@
-import { Box, Container, Paper } from "@mui/material";
+import { Container, Paper } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import LoginForm from "../components/LoginForm";
-import type { LoginFormValues } from "../model/LoginForm.types";
+
+const PageWrapper = styled("div")(({ theme }) => ({
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: theme.palette.background.default,
+}));
+
+const LoginCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: 16,
+}));
 
 export const Login = () => {
-  const handleLogin = (values: LoginFormValues) => {
-    console.log("Login submitted", values);
-  };
-
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        bgcolor: "background.default",
-      }}
-    >
+    <PageWrapper>
       <Container maxWidth="xs">
-        <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
-          <LoginForm onSubmit={handleLogin} />
-        </Paper>
+        <LoginCard elevation={3}>
+          <LoginForm />
+        </LoginCard>
       </Container>
-    </Box>
+    </PageWrapper>
   );
 };
 

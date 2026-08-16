@@ -5,4 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ command }) => ({
   base: command === 'build' ? '/login_gcp_front_end/' : '/',
   plugins: [react()],
+  server: {
+    port: 3000,
+  },
 }))
