@@ -1,23 +1,37 @@
 import { useState } from "react";
 import type { SubmitEvent } from "react";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import type { LoginFormProps } from "../model/LoginForm.types";
+import {
+  Alert,
+  Box,
+  Button,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useUserLogin } from "../hooks/useUserLogin";
 
-export const LoginForm = ({ onSubmit }: LoginFormProps) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const FormTitle = styled(Typography)({
+  fontWeight: 600,
+}) as typeof Typography;
+
+export const LoginForm = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const { data, loading, error, login } = useUserLogin();
 
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit?.({ email, password });
+    console.log("Submitting form with values:", { email, password });
+    login({ email, password });
   };
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
       <Stack spacing={2}>
-        <Typography variant="h5" component="h1" sx={{ fontWeight: 600 }}>
+        <FormTitle variant="h5" component="h1">
           Sign in
-        </Typography>
+        </FormTitle>
 
         <TextField
           label="Email"
@@ -39,9 +53,32 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
           fullWidth
         />
 
-        <Button type="submit" variant="contained" size="large" fullWidth>
+        {error && <Alert severity="error">{error.message}</Alert>}
+
+        <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          loading={loading}
+          disabled={loading}
+        >
           Sign in
         </Button>
+
+        {data && (
+          <Stack spacing={0.5}>
+            <Typography variant="body2">UID: {data.uid}</Typography>
+            <Typography variant="body2">Email: {data.mail}</Typography>
+            <Typography variant="body2">ID token: {data.idToken}</Typography>
+            <Typography variant="body2">
+              Refresh token: {data.refreshToken}
+            </Typography>
+            <Typography variant="body2">
+              Expires in: {data.expiresIn}s
+            </Typography>
+          </Stack>
+        )}
       </Stack>
     </Box>
   );
